@@ -1,0 +1,15 @@
+@import "mixins";
+
+html, body {
+
+}
+
+body {
+  h1 {
+    color: lightseagreen;
+  }
+}
+
+h2 {
+  @include my-mixin;
+}
