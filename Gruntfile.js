@@ -23,7 +23,7 @@ module.exports = function (grunt) {
 
 
     let config = {
-        assetPath: 'asset',
+        // assetPath: 'asset',
         distPath: 'dist',
     };
 
@@ -47,9 +47,10 @@ module.exports = function (grunt) {
         html_imports: {
             all: {
                 expand: true,
-                cwd: 'pages',
+                cwd: 'src/pages',
                 src: '**/*',
-                dest: `${config.distPath}/`
+                dest: `${config.distPath}/`,
+                flatten: true,
             }
         },
 
@@ -64,10 +65,11 @@ module.exports = function (grunt) {
             },
             all: {
                 expand: true,
-                cwd: `${config.assetPath}/styles/`,
-                src: '*.scss',
+                cwd: `src/`,
+                src: '**/*.scss',
                 dest: `${config.distPath}/`,
-                ext: '.css'
+                ext: '.css',
+                flatten: true,
             }
         },
 
