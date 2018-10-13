@@ -4,12 +4,11 @@ html, body {
 
 }
 
-body {
-  h1 {
+.scss-test {
+  .span1 {
     color: lightseagreen;
   }
-}
-
-h2 {
-  @include my-mixin;
+  .span2 {
+    @include mixin-test;
+  }
 }
