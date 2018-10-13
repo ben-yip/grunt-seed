@@ -19,12 +19,15 @@
     "list": "npm list --depth=0"
   },
   "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
     "grunt": "^1.0.3",
+    "grunt-babel": "^8.0.0",
     "grunt-contrib-clean": "^2.0.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-html-imports": "^0.1.0",
     "grunt-sass": "^3.0.2",
-    "jit-grunt": "^0.10.0",
+    "load-grunt-tasks": "^4.0.0",
     "node-sass": "^4.9.3",
     "time-grunt": "^1.4.0"
   },

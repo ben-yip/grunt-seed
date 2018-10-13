@@ -18,13 +18,23 @@ module.exports = function (grunt) {
      *   3. node_modules/task-name
      *
      * https://www.npmjs.com/package/jit-grunt
+     *
+     * ATTENTION:
+     * 'load-grunt-tasks' is more robust, use that instead, see below
      */
-    require('jit-grunt')(grunt, {});
+    // require('jit-grunt')(grunt, {});
+
+    /**
+     * Load multiple grunt tasks using globing patterns
+     * https://www.npmjs.com/package/load-grunt-tasks
+     */
+    require('load-grunt-tasks')(grunt, {});
 
 
     let config = {
         // assetPath: 'asset',
         distPath: 'dist',
+        sourceMap: true,  /* for SASS and Babel, set to false when in prod env */
     };
 
     grunt.initConfig({
@@ -38,7 +48,6 @@ module.exports = function (grunt) {
         // config: {
         //     paraName: 'paraValue'
         // },
-
 
         /**
          * Import html partials.
@@ -61,7 +70,7 @@ module.exports = function (grunt) {
         sass: {
             options: {
                 implementation: require('node-sass'),
-                sourceMap: true, /* todo remove when in prod env */
+                sourceMap: config.sourceMap,
             },
             all: {
                 expand: true,
@@ -73,6 +82,27 @@ module.exports = function (grunt) {
             }
         },
 
+        /**
+         * For Babel 7.x and grunt-babel v8
+         * > npm i -D grunt-babel @babel/core @babel/preset-env
+         *
+         * no .babelrc needed.
+         *
+         * https://www.npmjs.com/package/grunt-babel
+         */
+        babel: {
+            options: {
+                presets: ['@babel/preset-env'],
+                sourceMap: config.sourceMap
+            },
+            all: {
+                expand: true,
+                cwd: `src/`,
+                src: '**/*.js',
+                dest: `${config.distPath}/`,
+                flatten: true,
+            }
+        },
 
         // ====================
 
@@ -110,11 +140,12 @@ module.exports = function (grunt) {
         'copy',
         'html_imports',
         'sass',
+        'babel',
     ]);
 
     grunt.registerTask('test', 'test tasks functioning', [
         'clean',
-        'copy'
+        'babel'
     ]);
 
     grunt.registerTask('default', 'start dev server', '');
