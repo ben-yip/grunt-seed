@@ -69,6 +69,7 @@ module.exports = function (grunt) {
          */
         sass: {
             options: {
+                // https://github.com/sass/node-sass#options
                 implementation: require('node-sass'),
                 sourceMap: config.sourceMap,
             },
@@ -92,6 +93,7 @@ module.exports = function (grunt) {
          */
         babel: {
             options: {
+                // https://babeljs.io/docs/en/options
                 presets: ['@babel/preset-env'],
                 sourceMap: config.sourceMap
             },
