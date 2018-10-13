@@ -12,3 +12,13 @@ html, body {
     @include mixin-test;
   }
 }
+
+.bg-img {
+  $w: 100px;
+  $h: 118px;
+  width: $w;
+  height: $h;
+  border: 1px solid darkcyan;
+
+  background: url("../../asset/images/grunt-logo.png");
+}

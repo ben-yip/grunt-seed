@@ -3,15 +3,23 @@
 <head>
     <link rel="import" href="../fragments/_meta.html">
     <title>index</title>
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="index.scss">
 </head>
 <body>
 <h1 class="scss-test">
     <span class="span1">hello</span>
     <span class="span2">world</span>
 </h1>
+<div>
+    <p>test if <code>src</code> reference in <code>&lt;img&gt;</code> is modified properly:</p>
+    <img src="../../asset/images/grunt-logo.png" alt="image">
+</div>
+<div>
+    <p>background-image in css test:</p>
+    <div class="bg-img"></div>
+</div>
 
-<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript" src="../../../node_modules/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript" src="index.js"></script>
 </body>
 </html>

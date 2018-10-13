@@ -34,7 +34,7 @@ module.exports = function (grunt) {
     let config = {
         // assetPath: 'asset',
         distPath: 'dist',
-        sourceMap: true,  /* for SASS and Babel, set to false when in prod env */
+        sourceMap: true, /* for SASS and Babel, set to false when in prod env */
     };
 
     grunt.initConfig({
@@ -106,6 +106,33 @@ module.exports = function (grunt) {
             }
         },
 
+        /**
+         * This plugin is designed for prepending a CDN url to asset reference,
+         * but it also provide an option to customize the way processing those urls.
+         *
+         * Here, only assets' filename is kept in the url reference,
+         * as all the assets are exported in the same level directory.
+         *
+         * https://www.npmjs.com/package/grunt-cdnify
+         */
+        cdnify: {
+            all: {
+                options: {
+                    rewriter: url => {
+                        let filename = path.basename(url);
+                        if (filename.endsWith('.scss') || filename.endsWith('.sass')) {
+                            filename = filename.slice(0, -4) + 'css';
+                        }
+                        return filename;
+                    }
+                },
+                expand: true,
+                cwd: `${config.distPath}/`,
+                src: '**/*.{css,html}',
+                dest: `${config.distPath}/`
+            }
+        },
+
         // ====================
 
         /**
@@ -132,6 +159,13 @@ module.exports = function (grunt) {
                 ],
                 dest: `${config.distPath}/`,
                 flatten: true,
+            },
+            media: {
+                expand: true,
+                cwd: 'src',
+                src: '**/*.{jpg,jpeg,png,gif,mp4}',
+                dest: `${config.distPath}/`,
+                flatten: true,
             }
         }
     });
@@ -143,11 +177,16 @@ module.exports = function (grunt) {
         'html_imports',
         'sass',
         'babel',
+        'cdnify',
     ]);
 
     grunt.registerTask('test', 'test tasks functioning', [
         'clean',
-        'babel'
+        'sass'
+    ]);
+
+    grunt.registerTask('foo', [
+        'cdnify',
     ]);
 
     grunt.registerTask('default', 'start dev server', '');

@@ -3,16 +3,21 @@
 - The goal is to provide a neater developing experience other than having trouble managing all the resources manually, including minimal support for modern frontend technique and modular-style development.      
 - While Webpack is more capable of managing asset dependency, you may only use this workflow in small projects, or one that needs to support IE8- (Webpack is not friendly with IE8- because of ES5 supporting issues). Otherwise, use Webpack instead! See my project [webpack-seed](https://github.com/ben-yip/webpack-seed).
 
-# Feature
-- In this workflow, every page is regarded and managed as a module, which means all the assets relating to a page could be placed under the same folder.
+# Features
+- In this workflow, every page can be regarded and managed as a module, which means all the assets relating to a page could be placed under the same folder.
 - Supports **HTML partials**: A page could be broken down into many parts(`.html` files), then those reusable html fragments (say the header or footer) are now maintained in a single copy, rather than copy-and-paste the same content into every page.
 - Supports **Sass**: Feel free to use variables and mixins!
 - Supports **Babel**: Use ES6 features as you wish!
 
-## Dependencies Management
-- In `.html` files, while using SASS, you still need to refer the stylesheets end in `.css`.
-- Feel free to refer to image or font files in HTML or CSS using relative path during development. When build, all the assets(`.html`|`.css`|`.js`|`.jpg` etc) are exported under the same level directory without any sub-folders, those path references would be automatically modified.
+# Asset Dependencies Management
+- While this workflow supports SASS, in HTML, stylesheets in `<link>` can be referred to corresponding `.scss` or `.sass` files! SASS will be compiled into CSS and the filename extension will be rename to `.css` automatically.
+- Feel free to refer to image files in HTML or CSS using relative path during development. When build, all the assets(`.html`|`.css`|`.js`|`.jpg` etc) are exported under the same level directory without any sub-folders, those path references would be automatically modified;
+- Likewise, javascript files referred in HTML `<script>` supports using proper relative path.
+- In this way, You can enjoy the code assist feature provided by whatever IDE you use, and don't have to worry about asset reference issue of the build output. 
 
+# Limitations
+- If your project needs to support IE and use IE-specific comments (e.g. `<!--[if lt IE 9]>`) in HTML, the urls of asset reference would NOT be processed inside IE-specific comments. In this case, assign the asset's filename directly in `<link>` or `<script>` 's `src` attribute, and make sure these assets are copied to the dist folder (config manually in `grunt-contrib-copy` task).
+- As all the assets is exported to the same directory, make sure no assets are of the same filename during development, otherwise some assets might be omitted in the exported outcome.
 
 - - -
 Alter `Gruntfiles.js` and customize this workflow to meet your needs. Necessary comments are provided in every tasks' config.
