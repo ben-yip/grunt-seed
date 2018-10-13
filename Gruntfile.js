@@ -32,7 +32,7 @@ module.exports = function (grunt) {
 
 
     let config = {
-        // assetPath: 'asset',
+        srcPath: 'src',
         distPath: 'dist',
         sourceMap: true, /* for SASS and Babel, set to false when in prod env */
     };
@@ -56,7 +56,7 @@ module.exports = function (grunt) {
         html_imports: {
             all: {
                 expand: true,
-                cwd: 'src/pages',
+                cwd: `${config.srcPath}/pages`,
                 src: '**/*',
                 dest: `${config.distPath}/`,
                 flatten: true,
@@ -75,8 +75,8 @@ module.exports = function (grunt) {
             },
             all: {
                 expand: true,
-                cwd: `src/`,
-                src: '**/*.scss',
+                cwd: `${config.srcPath}`,
+                src: '**/*.{scss,sass}',
                 dest: `${config.distPath}/`,
                 ext: '.css',
                 flatten: true,
@@ -99,7 +99,7 @@ module.exports = function (grunt) {
             },
             all: {
                 expand: true,
-                cwd: `src/`,
+                cwd: `${config.srcPath}`,
                 src: '**/*.js',
                 dest: `${config.distPath}/`,
                 flatten: true,
@@ -116,24 +116,28 @@ module.exports = function (grunt) {
          * https://www.npmjs.com/package/grunt-cdnify
          */
         cdnify: {
-            all: {
-                options: {
-                    rewriter: url => {
-                        let filename = path.basename(url);
-                        if (filename.endsWith('.scss') || filename.endsWith('.sass')) {
-                            filename = filename.slice(0, -4) + 'css';
-                        }
-                        return filename;
+            options: {
+                rewriter: url => {
+                    let filename = path.basename(url);
+                    if (filename.endsWith('.scss') || filename.endsWith('.sass')) {
+                        filename = filename.slice(0, -4) + 'css';
                     }
+                    return filename;
                 },
+            },
+            html: {
                 expand: true,
                 cwd: `${config.distPath}/`,
-                src: '**/*.{css,html}',
-                dest: `${config.distPath}/`
+                src: '**/*.html',
+                dest: `${config.distPath}/`,
+            },
+            css: {
+                expand: true,
+                cwd: `${config.distPath}/`,
+                src: '**/*.css',
+                dest: `${config.distPath}/`,
             }
         },
-
-        // ====================
 
         /**
          * Remove files and folders.
@@ -148,6 +152,8 @@ module.exports = function (grunt) {
         /**
          * Usually used to copy needed files to destination directory (build outputs)
          * https://www.npmjs.com/package/grunt-contrib-copy
+         *
+         * todo: specify whatever asset you need to be copied to the exported folder.
          */
         copy: {
             jsLib: {
@@ -162,14 +168,43 @@ module.exports = function (grunt) {
             },
             media: {
                 expand: true,
-                cwd: 'src',
-                src: '**/*.{jpg,jpeg,png,gif,mp4}',
+                cwd: `${config.srcPath}`,
+                src: '**/*.{jpg,jpeg,png,gif,svg,mp3,mp4}',
                 dest: `${config.distPath}/`,
                 flatten: true,
             }
+        },
+
+        /**
+         * Run predefined tasks whenever watched file patterns are added, changed or deleted
+         * https://www.npmjs.com/package/grunt-contrib-watch
+         *
+         * In the following config,
+         * only performs corresponding task(s) when a specific type of file is changed,
+         * rather than do the whole build task all over again, which is time-consuming and unnecessary.
+         */
+        watch: {
+            options: {
+                spawn: false,    // false: speed up the reaction time of the watch, but can make the watch more prone to failing so please use as needed.
+                interrupt: true, // terminate previous process if new file-change event fired.
+                interval: 100,   // passed to fs.watchFile, default is 100ms.
+                reload: true,    // true: changes to any of the watched files will trigger the watch task to restart.
+                atBegin: false,  // trigger the run of each specified task at startup of the watcher.
+            },
+            html: {
+                files: `${config.srcPath}/**/*.html`,
+                tasks: ['html_imports', 'cdnify:html'],
+            },
+            sass: {
+                files: `${config.srcPath}/**/*.{scss,sass}`,
+                tasks: ['sass', 'cdnify:css'],
+            },
+            babel: {
+                files: `${config.srcPath}/**/*.js`,
+                tasks: ['babel'],
+            }
         }
     });
-
 
     grunt.registerTask('build', [
         'clean:dist',
@@ -185,15 +220,8 @@ module.exports = function (grunt) {
         'sass'
     ]);
 
-    grunt.registerTask('foo', [
-        'cdnify',
+    grunt.registerTask('default', 'start dev server', [
+        'build',
+        'watch',
     ]);
-
-    grunt.registerTask('default', 'start dev server', '');
-
-    /**
-     * todo
-     * watch时，哪个类型的文件有变动，就只执行该类型文件的重新编译
-     * 不要全部类型的文件都重新编译
-     */
 };

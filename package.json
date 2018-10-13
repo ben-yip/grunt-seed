@@ -15,6 +15,8 @@
     "url": "https://github.com/ben-yip/grunt-seed/issues"
   },
   "scripts": {
+    "start": "grunt",
+    "build": "grunt build",
     "cmder": "cmder %cd%",
     "list": "npm list --depth=0"
   },
@@ -26,6 +28,7 @@
     "grunt-cdnify": "^1.0.2",
     "grunt-contrib-clean": "^2.0.0",
     "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-watch": "^1.1.0",
     "grunt-html-imports": "^0.1.0",
     "grunt-sass": "^3.0.2",
     "load-grunt-tasks": "^4.0.0",
