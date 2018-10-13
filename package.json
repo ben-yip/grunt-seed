@@ -25,6 +25,7 @@
     "@babel/preset-env": "^7.1.0",
     "grunt": "^1.0.3",
     "grunt-babel": "^8.0.0",
+    "grunt-browser-sync": "^2.2.0",
     "grunt-cdnify": "^1.0.2",
     "grunt-contrib-clean": "^2.0.0",
     "grunt-contrib-copy": "^1.0.0",

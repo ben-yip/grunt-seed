@@ -203,6 +203,30 @@ module.exports = function (grunt) {
                 files: `${config.srcPath}/**/*.js`,
                 tasks: ['babel'],
             }
+        },
+
+        /**
+         * Use browserSync as the hot dev server.
+         *
+         * https://www.npmjs.com/package/grunt-browser-sync
+         * https://www.browsersync.io/docs/grunt#grunt-watch
+         */
+        browserSync: {
+            dev: {
+                options: {
+                    /* https://www.browsersync.io/docs/options */
+                    server: `${config.distPath}`,
+                    port: 8000,
+                    ui: {port: 8001},
+                    open: true,
+                    notify: false,
+
+                    watchTask: true, // be sure to call the watch task AFTER browserSync
+                },
+                bsFiles: {
+                    src: [`${config.distPath}/*`]  // watches all the files under dist.
+                },
+            }
         }
     });
 
@@ -216,12 +240,12 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('test', 'test tasks functioning', [
-        'clean',
-        'sass'
+        'browserSync'
     ]);
 
     grunt.registerTask('default', 'start dev server', [
         'build',
+        'browserSync',
         'watch',
     ]);
 };
