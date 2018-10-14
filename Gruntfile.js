@@ -248,7 +248,7 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('build', [
+    grunt.registerTask('build', 'build all the src and export to dist.',[
         'clean:dist',
         'copy',
 
@@ -260,13 +260,13 @@ module.exports = function (grunt) {
         'cdnify',
     ]);
 
-    grunt.registerTask('test', 'test tasks functioning', [
-        'browserSync'
-    ]);
-
     grunt.registerTask('default', 'start dev server', [
         'build',
         'browserSync',
         'watch',
+    ]);
+
+    grunt.registerTask('test', 'test tasks functioning', [
+
     ]);
 };
