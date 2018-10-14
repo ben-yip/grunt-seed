@@ -22,4 +22,5 @@
 
 # FYI
 - If you haven't used `browser-sync`(which `grunt-browser-sync` requires as a dependency)  before and there is no npm cache, the installing process could cost a bit more time, be patient until the npm install is done.
-- Alter `Gruntfiles.js` and customize this workflow to meet your needs. Necessary comments are provided in every task's config.
+- Read through `Gruntfiles.js`, alter it and customize this workflow to meet your needs. Necessary comments are provided in every task's config.
+- Jquery 1.x is require as a dependency by default in order to support IE8-, switch to version 3 or remove it if necessary.
