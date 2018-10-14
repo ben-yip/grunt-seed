@@ -227,15 +227,36 @@ module.exports = function (grunt) {
                     src: [`${config.distPath}/*`]  // watches all the files under dist.
                 },
             }
+        },
+
+        /**
+         * Run grunt tasks concurrently to improve the build time
+         * https://www.npmjs.com/package/grunt-concurrent
+         */
+        concurrent: {
+            /*
+             * HTML|SASS|Babel compile process can be done separately at the same time.
+             * While there are not so many files to handle at the beginning,
+             * the concurrent tasks' loading time would take up a larger part of the whole build time,
+             * therefore you may uncomment the concurrent task config later as the development goes on.
+             */
+            compile: [
+                'html_imports',
+                'sass',
+                'babel',
+            ]
         }
     });
 
     grunt.registerTask('build', [
         'clean:dist',
         'copy',
+
         'html_imports',
         'sass',
         'babel',
+        // 'concurrent:compile',
+
         'cdnify',
     ]);
 
