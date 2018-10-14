@@ -111,6 +111,63 @@ module.exports = function (grunt) {
         },
 
         /**
+         * Minify CSS
+         * https://www.npmjs.com/package/grunt-contrib-cssmin
+         */
+        cssmin: {
+            options: {
+                sourceMap: config.sourceMap
+            },
+            dist: {
+                files: [{
+                    expand: true,
+                    cwd: `${config.distPath}`,
+                    src: ['*.css', '!*.min.css'],
+                    dest: `${config.distPath}`,
+                    ext: '.min.css'
+                }]
+            }
+        },
+
+        /**
+         * Minify JavaScript files with UglifyJS
+         * https://www.npmjs.com/package/grunt-contrib-uglify
+         */
+        uglify: {
+            options: {
+                sourceMap: config.sourceMap,
+                ie8: true,
+            },
+            dist: {
+                files: [{
+                    expand: true,
+                    cwd: `${config.distPath}`,
+                    src: ['*.js', '!*.min.js'],
+                    dest: `${config.distPath}`,
+                    ext: '.min.js'
+                }]
+            }
+        },
+
+        /**
+         * Minify images using imagemin
+         * https://www.npmjs.com/package/grunt-contrib-imagemin
+         */
+        imagemin: {
+            options: {
+                optimizationLevel: 3, // [PNG] 0~7, defaults 3
+                progressive: true,    // [JPG] Lossless conversion to progressive. defaults true
+                interlaced: true,     // [GIF] Interlace gif for progressive rendering. defaults true
+            },
+            dist: {
+                expand: true,
+                cwd: `${config.distPath}`,
+                src: ['*.{jpg,jpeg,png,gif,svg}'],
+                dest: `${config.distPath}`
+            }
+        },
+
+        /**
          * This plugin is designed for prepending a CDN url to asset reference,
          * but it also provide an option to customize the way processing those urls.
          *
@@ -290,63 +347,6 @@ module.exports = function (grunt) {
                 'imagemin',
             ]
         },
-
-        /**
-         * Minify CSS
-         * https://www.npmjs.com/package/grunt-contrib-cssmin
-         */
-        cssmin: {
-            options: {
-                sourceMap: config.sourceMap
-            },
-            dist: {
-                files: [{
-                    expand: true,
-                    cwd: `${config.distPath}`,
-                    src: ['*.css', '!*.min.css'],
-                    dest: `${config.distPath}`,
-                    ext: '.min.css'
-                }]
-            }
-        },
-
-        /**
-         * Minify JavaScript files with UglifyJS
-         * https://www.npmjs.com/package/grunt-contrib-uglify
-         */
-        uglify: {
-            options: {
-                sourceMap: config.sourceMap,
-                ie8: true,
-            },
-            dist: {
-                files: [{
-                    expand: true,
-                    cwd: `${config.distPath}`,
-                    src: ['*.js', '!*.min.js'],
-                    dest: `${config.distPath}`,
-                    ext: '.min.js'
-                }]
-            }
-        },
-
-        /**
-         * Minify images using imagemin
-         * https://www.npmjs.com/package/grunt-contrib-imagemin
-         */
-        imagemin: {
-            options: {
-                optimizationLevel: 3, // [PNG] 0~7, defaults 3
-                progressive: true,    // [JPG] Lossless conversion to progressive. defaults true
-                interlaced: true,     // [GIF] Interlace gif for progressive rendering. defaults true
-            },
-            dist: {
-                expand: true,
-                cwd: `${config.distPath}`,
-                src: ['*.{jpg,jpeg,png,gif,svg}'],
-                dest: `${config.distPath}`
-            }
-        }
     });
 
     grunt.registerTask('compile', 'compile HTML, Sass and Babel', [
