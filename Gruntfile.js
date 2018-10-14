@@ -178,22 +178,25 @@ module.exports = function (grunt) {
              * Only assets' filename is kept in the url reference,
              * as all the assets are exported in the same level directory.
              */
-            basename: {
-                options: {
-                    rewriter: url => {
-                        let filename = path.basename(url);
-                        if (filename.endsWith('.scss') || filename.endsWith('.sass')) {
-                            filename = filename.slice(0, -4) + 'css';
-                        }
-                        return filename;
-                    },
+            options: {
+                rewriter: url => {
+                    let filename = path.basename(url);
+                    if (filename.endsWith('.scss') || filename.endsWith('.sass')) {
+                        filename = filename.slice(0, -4) + 'css';
+                    }
+                    return filename;
                 },
+            },
+            html: {
                 expand: true,
                 cwd: `${config.distPath}/`,
-                src: [
-                    '**/*.html',
-                    '**/*.css',
-                ],
+                src: '**/*.html',
+                dest: `${config.distPath}/`,
+            },
+            css: {
+                expand: true,
+                cwd: `${config.distPath}/`,
+                src: '**/*.css',
                 dest: `${config.distPath}/`,
             },
 
@@ -358,7 +361,8 @@ module.exports = function (grunt) {
         'babel',
         // 'concurrent:compile',
 
-        'cdnify:basename'
+        'cdnify:html',
+        'cdnify:css',
     ]);
 
     grunt.registerTask('min', 'do the optimization work', [
