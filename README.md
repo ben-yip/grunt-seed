@@ -18,7 +18,7 @@
 
 # Limitations
 - If your project needs to support IE and use IE-specific comments (e.g. `<!--[if lt IE 9]>`) in HTML, the urls of asset reference would NOT be processed inside IE-specific comments. In this case, assign the asset's filename directly in `<link>` or `<script>` 's `src` attribute, and make sure these assets are copied to the dist folder (config manually in `grunt-contrib-copy` task).
-- As all the assets is exported to the same directory, make sure no assets are of the same filename during development, otherwise some assets might be omitted in the exported outcome.
+- As all the assets is exported to the same directory, make sure no assets are of the same filename during development, otherwise some assets might be omitted in the exported outcome. On the other hand, you may have multiple copies of the same file of a same name in different folders inside your src, the build result will only keep one of them.
 
 # FYI
 - If you haven't used `browser-sync`(which `grunt-browser-sync` requires as a dependency)  before and there is no npm cache, the installing process could cost a bit more time, be patient until the npm install is done.
