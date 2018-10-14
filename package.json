@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "grunt workflow to build websites",
   "keywords": [
-    "grunt"
+    "grunt",
+    "workflow"
   ],
   "author": "BenYip",
   "homepage": "https://github.com/ben-yip/grunt-seed#readme",
@@ -15,7 +16,7 @@
     "url": "https://github.com/ben-yip/grunt-seed/issues"
   },
   "scripts": {
-    "start": "grunt",
+    "start": "grunt start",
     "build": "grunt build",
     "cmder": "cmder %cd%",
     "list": "npm list --depth=0"
@@ -30,6 +31,8 @@
     "grunt-concurrent": "^2.3.1",
     "grunt-contrib-clean": "^2.0.0",
     "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-cssmin": "^3.0.0",
+    "grunt-contrib-uglify": "^4.0.0",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-html-imports": "^0.1.0",
     "grunt-sass": "^3.0.2",

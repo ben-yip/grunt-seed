@@ -5,7 +5,11 @@ const path = require('path');
 module.exports = function (grunt) {
 
     /**
-     * Display the elapsed execution time of grunt tasks
+     * Display the elapsed execution time of grunt tasks.
+     *
+     * The watch task and tasks that take less than 1% of the total time are hidden to reduce clutter.
+     * Run grunt with grunt --verbose to see all tasks.
+     *
      * https://www.npmjs.com/package/time-grunt
      */
     require('time-grunt')(grunt);
@@ -110,31 +114,52 @@ module.exports = function (grunt) {
          * This plugin is designed for prepending a CDN url to asset reference,
          * but it also provide an option to customize the way processing those urls.
          *
-         * Here, only assets' filename is kept in the url reference,
-         * as all the assets are exported in the same level directory.
-         *
          * https://www.npmjs.com/package/grunt-cdnify
          */
         cdnify: {
-            options: {
-                rewriter: url => {
-                    let filename = path.basename(url);
-                    if (filename.endsWith('.scss') || filename.endsWith('.sass')) {
-                        filename = filename.slice(0, -4) + 'css';
-                    }
-                    return filename;
+            /**
+             * Only assets' filename is kept in the url reference,
+             * as all the assets are exported in the same level directory.
+             */
+            basename: {
+                options: {
+                    rewriter: url => {
+                        let filename = path.basename(url);
+                        if (filename.endsWith('.scss') || filename.endsWith('.sass')) {
+                            filename = filename.slice(0, -4) + 'css';
+                        }
+                        return filename;
+                    },
                 },
+                expand: true,
+                cwd: `${config.distPath}/`,
+                src: [
+                    '**/*.html',
+                    '**/*.css',
+                ],
+                dest: `${config.distPath}/`,
             },
-            html: {
+
+            /**
+             * After cssmin and uglify optimization,
+             * alter HTMl's .css|.js asset reference url to .min.css|.min.js
+             */
+            min: {
+                options: {
+                    rewriter: url => {
+                        let filename = path.basename(url);
+                        if (filename.endsWith('.css') && !filename.endsWith('.min.css')) {
+                            filename = filename.slice(0, -3) + 'min.css';
+                        }
+                        if (filename.endsWith('.js') && !filename.endsWith('.min.js')) {
+                            filename = filename.slice(0, -2) + 'min.js';
+                        }
+                        return filename;
+                    },
+                },
                 expand: true,
                 cwd: `${config.distPath}/`,
                 src: '**/*.html',
-                dest: `${config.distPath}/`,
-            },
-            css: {
-                expand: true,
-                cwd: `${config.distPath}/`,
-                src: '**/*.css',
                 dest: `${config.distPath}/`,
             }
         },
@@ -146,6 +171,14 @@ module.exports = function (grunt) {
         clean: {
             dist: {
                 src: `${config.distPath}/`
+            },
+            nonmin: {
+                expand: true,
+                cwd: `${config.distPath}`,
+                src: [
+                    '*.css', '!*.min.css', '*.css.map',
+                    '*.js', '!*.min.js', '*.js.map',
+                ]
             }
         },
 
@@ -245,10 +278,49 @@ module.exports = function (grunt) {
                 'sass',
                 'babel',
             ]
+        },
+
+        /**
+         * Minify CSS
+         * https://www.npmjs.com/package/grunt-contrib-cssmin
+         */
+        cssmin: {
+            options: {
+                sourceMap: config.sourceMap
+            },
+            dist: {
+                files: [{
+                    expand: true,
+                    cwd: `${config.distPath}`,
+                    src: ['*.css', '!*.min.css'],
+                    dest: `${config.distPath}`,
+                    ext: '.min.css'
+                }]
+            }
+        },
+
+        /**
+         * Minify JavaScript files with UglifyJS
+         * https://www.npmjs.com/package/grunt-contrib-uglify
+         */
+        uglify: {
+            options: {
+                sourceMap: config.sourceMap,
+                ie8: true,
+            },
+            dist: {
+                files: [{
+                    expand: true,
+                    cwd: `${config.distPath}`,
+                    src: ['*.js', '!*.min.js'],
+                    dest: `${config.distPath}`,
+                    ext: '.min.js'
+                }]
+            }
         }
     });
 
-    grunt.registerTask('build', 'build all the src and export to dist.',[
+    grunt.registerTask('compile', 'compile HTML, Sass and Babel', [
         'clean:dist',
         'copy',
 
@@ -257,16 +329,31 @@ module.exports = function (grunt) {
         'babel',
         // 'concurrent:compile',
 
-        'cdnify',
+        'cdnify:basename'
     ]);
 
-    grunt.registerTask('default', 'start dev server', [
-        'build',
+    grunt.registerTask('min', 'do the optimization work', [
+        'cssmin',
+        'uglify',
+        'cdnify:min',
+        'clean:nonmin',
+    ]);
+
+    grunt.registerTask('build', 'build all the src and optimize assets', [
+        'compile',
+        'min' /* optional, works fine without optimizing work */
+    ]);
+
+    grunt.registerTask('start', 'start dev server', [
+        'compile',
         'browserSync',
         'watch',
     ]);
 
-    grunt.registerTask('test', 'test tasks functioning', [
+    grunt.registerTask('default', 'alias for start task', 'start');
 
+    grunt.registerTask('test', 'test tasks functioning', [
+        'cssmin',
+        'cdnify:min'
     ]);
 };
