@@ -277,6 +277,17 @@ module.exports = function (grunt) {
                 'html_imports',
                 'sass',
                 'babel',
+            ],
+            /*
+             * same issue as above,
+             * each child process task's loading time normally cost several hundred ms,
+             * if the task itself actually costs less time than the loading stage,
+             * then no need to run concurrently wasting time loading each task.
+             */
+            min: [
+                'cssmin',
+                'uglify',
+                'imagemin',
             ]
         },
 
@@ -317,6 +328,24 @@ module.exports = function (grunt) {
                     ext: '.min.js'
                 }]
             }
+        },
+
+        /**
+         * Minify images using imagemin
+         * https://www.npmjs.com/package/grunt-contrib-imagemin
+         */
+        imagemin: {
+            options: {
+                optimizationLevel: 3, // [PNG] 0~7, defaults 3
+                progressive: true,    // [JPG] Lossless conversion to progressive. defaults true
+                interlaced: true,     // [GIF] Interlace gif for progressive rendering. defaults true
+            },
+            dist: {
+                expand: true,
+                cwd: `${config.distPath}`,
+                src: ['*.{jpg,jpeg,png,gif,svg}'],
+                dest: `${config.distPath}`
+            }
         }
     });
 
@@ -335,6 +364,9 @@ module.exports = function (grunt) {
     grunt.registerTask('min', 'do the optimization work', [
         'cssmin',
         'uglify',
+        'imagemin',
+        // 'concurrent:min',
+
         'cdnify:min',
         'clean:nonmin',
     ]);
