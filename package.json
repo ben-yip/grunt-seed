@@ -19,7 +19,8 @@
     "start": "grunt start",
     "build": "grunt build",
     "cmder": "cmder %cd%",
-    "list": "npm list --depth=0"
+    "list": "npm list --depth=0",
+    "doctoc": "doctoc README.md"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
@@ -43,6 +44,8 @@
   },
   "dependencies": {
     "es5-shim": "^4.5.12",
-    "jquery": "^1.12.4"
+    "jquery": "^1.12.4",
+    "normalize.css": "^8.0.0",
+    "slick-carousel": "^1.8.1"
   }
 }

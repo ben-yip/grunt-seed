@@ -61,7 +61,7 @@ module.exports = function (grunt) {
             all: {
                 expand: true,
                 cwd: `${config.srcPath}/pages`,
-                src: '**/*',
+                src: '**/*.html',
                 dest: `${config.distPath}/`,
                 flatten: true,
             }
@@ -113,10 +113,14 @@ module.exports = function (grunt) {
         /**
          * Minify CSS
          * https://www.npmjs.com/package/grunt-contrib-cssmin
+         *
+         * For finer-grained control, see:
+         * https://github.com/jakubpawlowicz/clean-css#constructor-options
          */
         cssmin: {
             options: {
-                sourceMap: config.sourceMap
+                sourceMap: config.sourceMap,
+                compatibility: 'ie8',
             },
             dist: {
                 files: [{
@@ -252,6 +256,7 @@ module.exports = function (grunt) {
             jsLib: {
                 expand: true,
                 src: [
+                    /* no need to use absolute path */
                     // path.join(__dirname, 'node_modules/es5-shim/es5-shim.min.js')
                     'node_modules/es5-shim/es5-shim.min.js',
                     'node_modules/jquery/dist/jquery.min.js',
@@ -259,10 +264,30 @@ module.exports = function (grunt) {
                 dest: `${config.distPath}/`,
                 flatten: true,
             },
+
+            /**
+             * slick-carousel assets, uncomment this if needed.
+             * https://github.com/kenwheeler/slick/
+             * http://kenwheeler.github.io/slick/
+             *
+             * REMEMBER to @import slick.scss and slick-theme.scss in your on scss files.
+             */
+            // slick_carousel: {
+            //     expand: true,
+            //     cwd: 'node_modules/slick-carousel/slick/',
+            //     src: [
+            //         'slick.min.js',
+            //         'fonts/*.*',
+            //         'ajax-loader.gif',
+            //     ],
+            //     dest: `${config.distPath}/`,
+            //     flatten: true,
+            // },
+
             media: {
                 expand: true,
                 cwd: `${config.srcPath}`,
-                src: '**/*.{jpg,jpeg,png,gif,svg,mp3,mp4}',
+                src: '**/*.{jpg,jpeg,png,gif,svg,mp3,mp4,htc}',
                 dest: `${config.distPath}/`,
                 flatten: true,
             }

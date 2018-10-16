@@ -1,3 +1,16 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Intro](#intro)
+- [Features](#features)
+- [Asset Dependencies Management](#asset-dependencies-management)
+- [Limitations](#limitations)
+- [Predefined Resources](#predefined-resources)
+- [FYI](#fyi)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Intro
 - This is a Grunt workflow to build static websites.     
 - The goal is to provide a neater developing experience other than having trouble managing all the resources manually, including minimal support for modern frontend technique and modular-style development.      
@@ -19,6 +32,13 @@
 # Limitations
 - If your project needs to support IE and use IE-specific comments (e.g. `<!--[if lt IE 9]>`) in HTML, the urls of asset reference would NOT be processed inside IE-specific comments. In this case, assign the asset's filename directly in `<link>` or `<script>` 's `src` attribute, and make sure these assets are copied to the dist folder (config manually in `grunt-contrib-copy` task).
 - As all the assets is exported to the same directory, make sure no assets are of the same filename during development, otherwise some assets might be omitted in the exported outcome. On the other hand, you may have multiple copies of the same file of a same name in different folders inside your src, the build result will only keep one of them.
+
+# Predefined Resources
+The following libraries are already defined in `package.json`, keep or omit them before installation.
+- normalize.css
+- es5-shim (for IE 8 compatibility)
+- jquery 1.12 (for IE compatibility)
+- slick carousel
 
 # FYI
 - If you haven't used `browser-sync`(which `grunt-browser-sync` requires as a dependency)  before and there is no npm cache, the installing process could cost a bit more time, be patient until the npm install is done.
