@@ -422,7 +422,8 @@ module.exports = function (grunt) {
         'chokidar',
     ]);
 
-    grunt.registerTask('default', 'alias for start task', 'start');
+    grunt.registerTask('default', 'alias of "start" task.', 'start');
+    grunt.registerTask('watch', 'alias for "chokidar" task.', 'chokidar');
 
     grunt.registerTask('test', 'test tasks functioning', [
         'clean:dist',
