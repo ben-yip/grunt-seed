@@ -60,9 +60,9 @@ module.exports = function (grunt) {
         html_imports: {
             all: {
                 expand: true,
-                cwd: `${config.srcPath}/pages`,
+                cwd: `${config.srcPath}`,
                 src: '**/*.html',
-                dest: `${config.distPath}/`,
+                dest: `${config.distPath}`,
                 flatten: true,
             }
         },
@@ -81,7 +81,7 @@ module.exports = function (grunt) {
                 expand: true,
                 cwd: `${config.srcPath}`,
                 src: '**/*.{scss,sass}',
-                dest: `${config.distPath}/`,
+                dest: `${config.distPath}`,
                 ext: '.css',
                 flatten: true,
             }
@@ -105,7 +105,7 @@ module.exports = function (grunt) {
                 expand: true,
                 cwd: `${config.srcPath}`,
                 src: '**/*.js',
-                dest: `${config.distPath}/`,
+                dest: `${config.distPath}`,
                 flatten: true,
             }
         },
@@ -294,20 +294,27 @@ module.exports = function (grunt) {
         },
 
         /**
-         * Run predefined tasks whenever watched file patterns are added, changed or deleted
-         * https://www.npmjs.com/package/grunt-contrib-watch
+         * Run predefined tasks whenever watched file patterns are added, changed or deleted using chokidar.
+         * https://www.npmjs.com/package/grunt-chokidar
+         *
+         * Options:
+         * (below are default values)
+         *   spawn: true,      | false: speed up the reaction time of the watch, but can make the watch more prone to failing.
+         *   interrupt: false, | true: terminate previous process if new file-change event fired.
+         *   interval: 100,    | time(ms) passed to fs.watchFile.
+         *   reload: false,    | true: changes to any of the watched files will trigger the watch task to restart.
+         *   atBegin: false,   | trigger the run of each specified task at startup of the watcher.
+         *   event: 'all',     | can be 'all', 'change', 'add', 'addDir', 'unlink' and 'unlinkDir' define in an array.
          *
          * In the following config,
          * only performs corresponding task(s) when a specific type of file is changed,
          * rather than do the whole build task all over again, which is time-consuming and unnecessary.
          */
-        watch: {
+        chokidar: {
             options: {
-                spawn: false,    // false: speed up the reaction time of the watch, but can make the watch more prone to failing so please use as needed.
-                interrupt: true, // terminate previous process if new file-change event fired.
-                interval: 100,   // passed to fs.watchFile, default is 100ms.
-                reload: true,    // true: changes to any of the watched files will trigger the watch task to restart.
-                atBegin: false,  // trigger the run of each specified task at startup of the watcher.
+                spawn: false,
+                interrupt: true,
+                reload: true,
             },
             html: {
                 files: `${config.srcPath}/**/*.html`,
@@ -320,6 +327,10 @@ module.exports = function (grunt) {
             babel: {
                 files: `${config.srcPath}/**/*.js`,
                 tasks: ['babel'],
+            },
+            newMedia: {
+                files: `${config.srcPath}/**/*.{jpg,jpeg,png,gif,svg,mp3,mp4,htc}`,
+                tasks: ['copy:media'],
             }
         },
 
@@ -408,13 +419,13 @@ module.exports = function (grunt) {
     grunt.registerTask('start', 'start dev server', [
         'compile',
         'browserSync',
-        'watch',
+        'chokidar',
     ]);
 
     grunt.registerTask('default', 'alias for start task', 'start');
 
     grunt.registerTask('test', 'test tasks functioning', [
-        'cssmin',
-        'cdnify:min'
+        'clean:dist',
+        'chokidar'
     ]);
 };
