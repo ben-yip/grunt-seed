@@ -104,7 +104,7 @@ module.exports = function (grunt) {
             all: {
                 expand: true,
                 cwd: `${config.srcPath}`,
-                src: '**/*.js',
+                src: ['**/*.js', '!**/*.min.js'],
                 dest: `${config.distPath}`,
                 flatten: true,
             }
