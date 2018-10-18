@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "es5-shim": "^4.5.12",
+    "ie7js": "^2.1.0",
     "jquery": "^1.12.4",
     "normalize.css": "^8.0.0",
     "slick-carousel": "^1.8.1"

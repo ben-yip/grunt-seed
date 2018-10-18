@@ -264,7 +264,24 @@ module.exports = function (grunt) {
                 dest: `${config.distPath}/`,
                 flatten: true,
             },
-
+            /**
+             * IE5/6/7/8 CSS support, uncomment this if needed.
+             * https://github.com/ben-yip/ie7js
+             *
+             * REMEMBER to add this to your HTML
+             *    <!--[if lt IE 9]>
+             *    <script type="text/javascript" src="IE9.min.js"></script>
+             *    <![endif]-->
+             */
+            // ie7js: {
+            //     expand: true,
+            //     dest: `${config.distPath}/`,
+            //     flatten: true,
+            //     src: [
+            //         'node_modules/ie7js/dist/IE9.min.js',
+            //         'node_modules/ie7js/dist/blank.gif'
+            //     ]
+            // },
             /**
              * slick-carousel assets, uncomment this if needed.
              * https://github.com/kenwheeler/slick/
