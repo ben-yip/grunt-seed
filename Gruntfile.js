@@ -174,15 +174,37 @@ module.exports = function (grunt) {
         /**
          * This plugin is designed for prepending a CDN url to asset reference,
          * but it also provide an option to customize the way processing those urls.
-         *
          * https://www.npmjs.com/package/grunt-cdnify
+         *
+         * Default applies to:
+         *   {
+         *     'img[data-src]': 'src',
+         *     'img[src]': 'src',
+         *     'link[rel="]': 'href',
+         *     'link[rel="shortcut icon"]': 'href',
+         *     'link[rel=icon]': 'href',
+         *     'link[rel=stylesheet]': 'href',
+         *     'script[src]': 'src',
+         *     'source[src]': 'src',
+         *     'video[poster]': 'poster'
+         *   }
+         * You can add more rules to it,
+         * or explicitly override any default rule you don't want with false.
+         * https://www.npmjs.com/package/grunt-cdnify#html-booleanobject
          */
         cdnify: {
-            /**
-             * Only assets' filename is kept in the url reference,
-             * as all the assets are exported in the same level directory.
-             */
             options: {
+                /**
+                 * parse <a> as well,
+                 * then you can refer to another .html in relative path during development.
+                 */
+                html: {
+                    'a': 'href'
+                },
+                /**
+                 * Only assets' filename is kept in the url reference,
+                 * as all the assets are exported in the same level directory.
+                 */
                 rewriter: url => {
                     let filename = path.basename(url);
                     if (filename.endsWith('.scss') || filename.endsWith('.sass')) {
