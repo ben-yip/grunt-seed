@@ -206,6 +206,11 @@ module.exports = function (grunt) {
                  * as all the assets are exported in the same level directory.
                  */
                 rewriter: url => {
+                    // leave data URIs untouched
+                    if (url.indexOf('data:') === 0) {
+                        return url;
+                    }
+
                     let filename = path.basename(url);
                     if (filename.endsWith('.scss') || filename.endsWith('.sass')) {
                         filename = filename.slice(0, -4) + 'css';
@@ -233,6 +238,11 @@ module.exports = function (grunt) {
             min: {
                 options: {
                     rewriter: url => {
+                        // leave data URIs untouched
+                        if (url.indexOf('data:') === 0) {
+                            return url;
+                        }
+
                         let filename = path.basename(url);
                         if (filename.endsWith('.css') && !filename.endsWith('.min.css')) {
                             filename = filename.slice(0, -3) + 'min.css';
