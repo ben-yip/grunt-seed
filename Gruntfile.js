@@ -336,7 +336,7 @@ module.exports = function (grunt) {
             media: {
                 expand: true,
                 cwd: `${config.srcPath}`,
-                src: '**/*.{jpg,jpeg,png,gif,svg,mp3,mp4,htc}',
+                src: '**/*.{jpg,jpeg,png,gif,svg,ico,mp3,mp4,htc}',
                 dest: `${config.distPath}/`,
                 flatten: true,
             }
