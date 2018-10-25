@@ -28,6 +28,7 @@
     "grunt": "^1.0.3",
     "grunt-babel": "^8.0.0",
     "grunt-browser-sync": "^2.2.0",
+    "grunt-buddha-bless": "^0.1.0",
     "grunt-cdnify": "^1.0.2",
     "grunt-chokidar": "^1.0.0",
     "grunt-concurrent": "^2.3.1",

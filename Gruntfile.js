@@ -435,6 +435,14 @@ module.exports = function (grunt) {
                 'imagemin',
             ]
         },
+
+        /**
+         * Buddha shines, no bugs alive.
+         * https://www.npmjs.com/package/grunt-buddha-bless
+         */
+        buddha: {
+            bless_me: `${config.distPath}/*.js`
+        }
     });
 
     grunt.registerTask('compile', 'compile HTML, Sass and Babel', [
@@ -462,7 +470,8 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', 'build all the src and optimize assets', [
         'compile',
-        'min' /* optional, works fine without optimizing work */
+        'min', /* optional, works fine without optimizing work */
+        'buddha',
     ]);
 
     grunt.registerTask('start', 'start dev server', [
