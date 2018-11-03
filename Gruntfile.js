@@ -210,6 +210,10 @@ module.exports = function (grunt) {
                     if (url.indexOf('data:') === 0) {
                         return url;
                     }
+                    // leave http URLs untouched
+                    if (/^https?:/.test(url)) {
+                        return url;
+                    }
 
                     let filename = path.basename(url);
                     if (filename.endsWith('.scss') || filename.endsWith('.sass')) {
@@ -240,6 +244,10 @@ module.exports = function (grunt) {
                     rewriter: url => {
                         // leave data URIs untouched
                         if (url.indexOf('data:') === 0) {
+                            return url;
+                        }
+                        // leave http URLs untouched
+                        if (/^https?:/.test(url)) {
                             return url;
                         }
 
