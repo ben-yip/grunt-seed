@@ -37,9 +37,19 @@ module.exports = function (grunt) {
 
     let config = {
         srcPath: 'src',
-        distPath: 'dist',
+        destPath: 'dist',
         sourceMap: true, /* for SASS and Babel, set to false when in prod env */
+        organizePath: {
+            asset: 'asset', // used for the parent dir for all assets
+            styles: 'styles',
+            scripts: 'scripts',
+            images: 'images',
+            fonts: 'fonts',
+            media: 'media'
+        },
     };
+
+    let destAssetPath = path.join(config.destPath, config.organizePath.asset);
 
     grunt.initConfig({
         /**
@@ -62,7 +72,7 @@ module.exports = function (grunt) {
                 expand: true,
                 cwd: `${config.srcPath}`,
                 src: '**/*.html',
-                dest: `${config.distPath}`,
+                dest: `${config.destPath}`,
                 flatten: true,
             }
         },
@@ -81,7 +91,7 @@ module.exports = function (grunt) {
                 expand: true,
                 cwd: `${config.srcPath}`,
                 src: '**/*.{scss,sass}',
-                dest: `${config.distPath}`,
+                dest: `${config.destPath}`,
                 ext: '.css',
                 flatten: true,
             }
@@ -105,7 +115,7 @@ module.exports = function (grunt) {
                 expand: true,
                 cwd: `${config.srcPath}`,
                 src: ['**/*.js', '!**/*.min.js'],
-                dest: `${config.distPath}`,
+                dest: `${config.destPath}`,
                 flatten: true,
             }
         },
@@ -125,9 +135,9 @@ module.exports = function (grunt) {
             dist: {
                 files: [{
                     expand: true,
-                    cwd: `${config.distPath}`,
+                    cwd: `${config.destPath}`,
                     src: ['*.css', '!*.min.css'],
-                    dest: `${config.distPath}`,
+                    dest: `${config.destPath}`,
                     ext: '.min.css'
                 }]
             }
@@ -145,9 +155,10 @@ module.exports = function (grunt) {
             dist: {
                 files: [{
                     expand: true,
-                    cwd: `${config.distPath}`,
+                    cwd: `${config.destPath}`,
                     src: ['*.js', '!*.min.js'],
-                    dest: `${config.distPath}`,
+                    extDot: 'last',
+                    dest: `${config.destPath}`,
                     ext: '.min.js'
                 }]
             }
@@ -165,9 +176,9 @@ module.exports = function (grunt) {
             },
             dist: {
                 expand: true,
-                cwd: `${config.distPath}`,
+                cwd: `${config.destPath}`,
                 src: ['*.{jpg,jpeg,png,gif,svg}'],
-                dest: `${config.distPath}`
+                dest: `${config.destPath}`
             }
         },
 
@@ -224,15 +235,15 @@ module.exports = function (grunt) {
             },
             html: {
                 expand: true,
-                cwd: `${config.distPath}/`,
+                cwd: `${config.destPath}/`,
                 src: '**/*.html',
-                dest: `${config.distPath}/`,
+                dest: `${config.destPath}/`,
             },
             css: {
                 expand: true,
-                cwd: `${config.distPath}/`,
+                cwd: `${config.destPath}/`,
                 src: '**/*.css',
-                dest: `${config.distPath}/`,
+                dest: `${config.destPath}/`,
             },
 
             /**
@@ -262,10 +273,95 @@ module.exports = function (grunt) {
                     },
                 },
                 expand: true,
-                cwd: `${config.distPath}/`,
+                cwd: `${config.destPath}/`,
                 src: '**/*.html',
-                dest: `${config.distPath}/`,
-            }
+                dest: `${config.destPath}/`,
+            },
+
+            /**
+             * Before moving different types of asset to according sub directories,
+             *   alter the url references in .html or .css
+             *
+             * todo: how to tell if a .svg is used for font or image?
+             *       As it's uncommon to use SVG for images, I would place all .svg under fonts dir
+             */
+            organize_html: {
+                options: {
+                    rewriter: url => {
+                        // leave data URIs untouched
+                        if (url.indexOf('data:') === 0) {
+                            return url;
+                        }
+                        // leave http URLs untouched
+                        if (/^https?:/.test(url)) {
+                            return url;
+                        }
+
+                        let filename = path.basename(url);
+                        let subPath = '';
+
+                        if (/\.css$/g.test(filename)) {
+                            subPath = `${config.organizePath.styles}/${filename}`;
+                        }
+                        else if (/\.js$/g.test(filename)) {
+                            subPath = `${config.organizePath.scripts}/${filename}`;
+                        }
+                        else if (/\.(jpg|jpeg|png|gif|ico)$/g.test(filename)) {
+                            subPath = `${config.organizePath.images}/${filename}`;
+                        }
+                        else if (/\.(eot|svg|ttf|woff|woff2)$/g.test(filename)) {
+                            subPath = `${config.organizePath.fonts}/${filename}`;
+                        }
+                        else if (/\.(mp3|mp4|swf)$/g.test(filename)) {
+                            subPath = `${config.organizePath.media}/${filename}`;
+                        } else {
+                            return url;
+                        }
+
+                        // console.log(path.join(config.organizePath.asset, subPath));
+                        return `${config.organizePath.asset}/${subPath}`;
+                    }
+                },
+                expand: true,
+                cwd: `${config.destPath}/`,
+                src: '**/*.html',
+                dest: `${config.destPath}/`,
+            },
+
+            organize_css: {
+                options: {
+                    rewriter: url => {
+                        // leave data URIs untouched
+                        if (url.indexOf('data:') === 0) {
+                            return url;
+                        }
+                        // leave http URLs untouched
+                        if (/^https?:/.test(url)) {
+                            return url;
+                        }
+
+                        let filename = path.basename(url);
+                        let subPath = '';
+
+                        if (/\.(jpg|jpeg|png|gif|ico)$/g.test(filename)) {
+                            subPath = `${config.organizePath.images}/${filename}`;
+                        }
+                        else if (/\.(eot|svg|ttf|woff|woff2)$/g.test(filename)) {
+                            subPath = `${config.organizePath.fonts}/${filename}`;
+                        }
+                        else {
+                            return url;
+                        }
+
+                        // console.log(path.join('..', subPath));
+                        return `../${subPath}`;
+                    }
+                },
+                expand: true,
+                cwd: `${config.destPath}/`,
+                src: '**/*.css',
+                dest: `${config.destPath}/`,
+            },
         },
 
         /**
@@ -274,11 +370,11 @@ module.exports = function (grunt) {
          */
         clean: {
             dist: {
-                src: `${config.distPath}/`
+                src: `${config.destPath}/`
             },
             nonmin: {
                 expand: true,
-                cwd: `${config.distPath}`,
+                cwd: `${config.destPath}`,
                 src: [
                     '*.css', '!*.min.css', '*.css.map',
                     '*.js', '!*.min.js', '*.js.map',
@@ -301,7 +397,7 @@ module.exports = function (grunt) {
                     'node_modules/es5-shim/es5-shim.min.js',
                     'node_modules/jquery/dist/jquery.min.js',
                 ],
-                dest: `${config.distPath}/`,
+                dest: `${config.destPath}/`,
                 flatten: true,
             },
             /**
@@ -315,7 +411,7 @@ module.exports = function (grunt) {
              */
             // ie7js: {
             //     expand: true,
-            //     dest: `${config.distPath}/`,
+            //     dest: `${config.destPath}/`,
             //     flatten: true,
             //     src: [
             //         'node_modules/ie7js/dist/IE9.min.js',
@@ -337,7 +433,7 @@ module.exports = function (grunt) {
             //         'fonts/*.*',
             //         'ajax-loader.gif',
             //     ],
-            //     dest: `${config.distPath}/`,
+            //     dest: `${config.destPath}/`,
             //     flatten: true,
             // },
 
@@ -345,8 +441,53 @@ module.exports = function (grunt) {
                 expand: true,
                 cwd: `${config.srcPath}`,
                 src: '**/*.{jpg,jpeg,png,gif,svg,ico,mp3,mp4,htc}',
-                dest: `${config.distPath}/`,
+                dest: `${config.destPath}/`,
                 flatten: true,
+            }
+        },
+
+        /**
+         *
+         * At final build stage, move asset files organizing to different sub folders.
+         * https://www.npmjs.com/package/grunt-move
+         */
+        move: {
+            options: {
+                ignoreMissing: true,
+            },
+            organize: {
+                files: [
+                    {
+                        expand: true, /* necessary */
+                        flatten: true,
+                        src: `${config.destPath}/**/*.css`,
+                        dest: path.join(destAssetPath, config.organizePath.styles),
+                    },
+                    {
+                        expand: true,
+                        flatten: true,
+                        src: `${config.destPath}/**/*.js`,
+                        dest: path.join(destAssetPath, config.organizePath.scripts),
+                    },
+                    {
+                        expand: true,
+                        flatten: true,
+                        src: `${config.destPath}/**/*.{jpg,jpeg,png,gif,ico}`,
+                        dest: path.join(destAssetPath, config.organizePath.images),
+                    },
+                    {
+                        expand: true,
+                        flatten: true,
+                        src: `${config.destPath}/**/*.{eot,svg,ttf,woff,woff2}`,
+                        dest: path.join(destAssetPath, config.organizePath.fonts),
+                    },
+                    {
+                        expand: true,
+                        flatten: true,
+                        src: `${config.destPath}/**/*.{mp3,mp4,swf}`,
+                        dest: path.join(destAssetPath, config.organizePath.media),
+                    },
+                ]
             }
         },
 
@@ -401,7 +542,7 @@ module.exports = function (grunt) {
             dev: {
                 options: {
                     /* https://www.browsersync.io/docs/options */
-                    server: `${config.distPath}`,
+                    server: `${config.destPath}`,
                     port: 8000,
                     ui: {port: 8001},
                     open: true,
@@ -410,7 +551,7 @@ module.exports = function (grunt) {
                     watchTask: true, // be sure to call the watch task AFTER browserSync
                 },
                 bsFiles: {
-                    src: [`${config.distPath}/*`]  // watches all the files under dist.
+                    src: [`${config.destPath}/*`]  // watches all the files under dist.
                 },
             }
         },
@@ -449,7 +590,7 @@ module.exports = function (grunt) {
          * https://www.npmjs.com/package/grunt-buddha-bless
          */
         buddha: {
-            bless_me: `${config.distPath}/*.js`
+            bless_me: `${config.destPath}/*.js`
         }
     });
 
@@ -460,7 +601,7 @@ module.exports = function (grunt) {
         'html_imports',
         'sass',
         'babel',
-        // 'concurrent:compile',
+        // 'concurrent:compile',  /*May even slow down since loading tasks separately costs extra time.*/
 
         'cdnify:html',
         'cdnify:css',
@@ -470,16 +611,23 @@ module.exports = function (grunt) {
         'cssmin',
         'uglify',
         'imagemin',
-        // 'concurrent:min',
+        // 'concurrent:min',  /*Same reason as above.*/
 
         'cdnify:min',
         'clean:nonmin',
     ]);
 
+    grunt.registerTask('organize', 'put different asset to corresponding sub folder.', [
+        'cdnify:organize_html',
+        'cdnify:organize_css',
+        'move:organize',
+    ]);
+
     grunt.registerTask('build', 'build all the src and optimize assets', [
         'compile',
         'min', /* optional, works fine without optimizing work */
-        'buddha',
+        'buddha', /* optional */
+        'organize' /* optional */
     ]);
 
     grunt.registerTask('start', 'start dev server', [
