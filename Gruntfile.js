@@ -121,6 +121,27 @@ module.exports = function (grunt) {
         },
 
         /**
+         * Minify HTML
+         *
+         * https://www.npmjs.com/package/grunt-contrib-htmlmin
+         * https://github.com/kangax/html-minifier#options-quick-reference
+         */
+        htmlmin: {
+            options: {
+                removeComments: true,
+                collapseWhitespace: true
+            },
+            dist: {
+                files: [{
+                    expand: true,
+                    cwd: `${config.destPath}`,
+                    src: ['*.html'],
+                    dest: `${config.destPath}`,
+                }]
+            }
+        },
+
+        /**
          * Minify CSS
          * https://www.npmjs.com/package/grunt-contrib-cssmin
          *
@@ -579,6 +600,7 @@ module.exports = function (grunt) {
              * then no need to run concurrently wasting time loading each task.
              */
             min: [
+                'htmlmin',
                 'cssmin',
                 'uglify',
                 'imagemin',
@@ -608,6 +630,7 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('min', 'do the optimization work', [
+        'htmlmin', /* optional */
         'cssmin',
         'uglify',
         'imagemin',
