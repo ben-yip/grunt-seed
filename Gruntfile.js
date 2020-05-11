@@ -71,7 +71,7 @@ module.exports = function (grunt) {
             all: {
                 expand: true,
                 cwd: `${config.srcPath}`,
-                src: '**/*.html',
+                src: ['**/*.html', '**/*.htm'],
                 dest: `${config.destPath}`,
                 flatten: true,
             }
@@ -135,7 +135,7 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     cwd: `${config.destPath}`,
-                    src: ['*.html'],
+                    src: ['*.html', '*.html',],
                     dest: `${config.destPath}`,
                 }]
             }
@@ -257,7 +257,7 @@ module.exports = function (grunt) {
             html: {
                 expand: true,
                 cwd: `${config.destPath}/`,
-                src: '**/*.html',
+                src: ['**/*.html', '**/*.htm'],
                 dest: `${config.destPath}/`,
             },
             css: {
@@ -323,17 +323,13 @@ module.exports = function (grunt) {
 
                         if (/\.css$/g.test(filename)) {
                             subPath = `${config.organizePath.styles}/${filename}`;
-                        }
-                        else if (/\.js$/g.test(filename)) {
+                        } else if (/\.js$/g.test(filename)) {
                             subPath = `${config.organizePath.scripts}/${filename}`;
-                        }
-                        else if (/\.(jpg|jpeg|png|gif|ico)$/g.test(filename)) {
+                        } else if (/\.(jpg|jpeg|png|gif|ico)$/g.test(filename)) {
                             subPath = `${config.organizePath.images}/${filename}`;
-                        }
-                        else if (/\.(eot|svg|ttf|woff|woff2)$/g.test(filename)) {
+                        } else if (/\.(eot|svg|ttf|woff|woff2)$/g.test(filename)) {
                             subPath = `${config.organizePath.fonts}/${filename}`;
-                        }
-                        else if (/\.(mp3|mp4|swf)$/g.test(filename)) {
+                        } else if (/\.(mp3|mp4|swf)$/g.test(filename)) {
                             subPath = `${config.organizePath.media}/${filename}`;
                         } else {
                             return url;
@@ -345,7 +341,7 @@ module.exports = function (grunt) {
                 },
                 expand: true,
                 cwd: `${config.destPath}/`,
-                src: '**/*.html',
+                src: ['**/*.html', '**/*.htm'],
                 dest: `${config.destPath}/`,
             },
 
@@ -366,11 +362,9 @@ module.exports = function (grunt) {
 
                         if (/\.(jpg|jpeg|png|gif|ico)$/g.test(filename)) {
                             subPath = `${config.organizePath.images}/${filename}`;
-                        }
-                        else if (/\.(eot|svg|ttf|woff|woff2)$/g.test(filename)) {
+                        } else if (/\.(eot|svg|ttf|woff|woff2)$/g.test(filename)) {
                             subPath = `${config.organizePath.fonts}/${filename}`;
-                        }
-                        else {
+                        } else {
                             return url;
                         }
 
@@ -536,7 +530,7 @@ module.exports = function (grunt) {
                 reload: true,
             },
             html: {
-                files: `${config.srcPath}/**/*.html`,
+                files: `${config.srcPath}/**/*.{html,htm}`,
                 tasks: ['html_imports', 'cdnify:html'],
             },
             sass: {
