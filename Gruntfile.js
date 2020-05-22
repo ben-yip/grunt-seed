@@ -135,7 +135,7 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     cwd: `${config.destPath}`,
-                    src: ['*.html', '*.html',],
+                    src: ['*.html', '*.htm',],
                     dest: `${config.destPath}`,
                 }]
             }
