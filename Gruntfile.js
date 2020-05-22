@@ -295,7 +295,7 @@ module.exports = function (grunt) {
                 },
                 expand: true,
                 cwd: `${config.destPath}/`,
-                src: '**/*.html',
+                src: ['**/*.html', '**/*.htm'],
                 dest: `${config.destPath}/`,
             },
 
