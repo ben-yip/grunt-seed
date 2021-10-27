@@ -418,6 +418,7 @@ module.exports = function (grunt) {
           // path.join(__dirname, 'node_modules/es5-shim/es5-shim.min.js')
           'node_modules/es5-shim/es5-shim.min.js',
           'node_modules/jquery/dist/jquery.min.js',
+          // 'node_modules/bootstrap/dist/js/bootstrap.bundle.min.js',
         ],
         dest: `${config.destPath}/`,
         flatten: true,
