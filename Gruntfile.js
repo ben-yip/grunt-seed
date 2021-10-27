@@ -231,7 +231,8 @@ module.exports = function (grunt) {
          * then you can refer to another .html in relative path during development.
          */
         html: {
-          'a[href]': 'href'
+          'a[href]': 'href',
+          'video[src]': 'src',
         },
         /**
          * Only assets' filename is kept in the url reference,
