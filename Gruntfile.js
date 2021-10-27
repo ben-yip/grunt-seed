@@ -363,7 +363,13 @@ module.exports = function (grunt) {
 
             if (/\.(jpg|jpeg|png|gif|ico)$/g.test(filename)) {
               subPath = `${config.organizePath.images}/${filename}`;
-            } else if (/\.(eot|svg|ttf|woff|woff2)$/g.test(filename)) {
+            }
+            /**
+             * in bootstrap-icons stylesheet, its font resource url contains trailing version mark,
+             * e.g. url("./fonts/bootstrap-icons.woff2?856008caa5eb66df68595e734e59580d")
+             * thus here do NOT use the $ to testify any font file extension.
+             */
+            else if (/\.(eot|svg|ttf|woff|woff2)/g.test(filename)) {
               subPath = `${config.organizePath.fonts}/${filename}`;
             } else {
               return url;
