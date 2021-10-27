@@ -424,6 +424,22 @@ module.exports = function (grunt) {
         flatten: true,
       },
       /**
+       * Bootstrap Icons.
+       * https://icons.getbootstrap.com/
+       *
+       * In addition, import bootstrap-icon.css in your own scss file.
+       */
+      bs_icons: {
+        expand: true,
+        src: [
+          // 'node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff',
+          // 'node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2',
+        ],
+        dest: `${config.destPath}/`,
+        flatten: true,
+      },
+
+      /**
        * IE5/6/7/8 CSS support, uncomment this if needed.
        * https://github.com/ben-yip/ie7js
        *
