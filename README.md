@@ -39,6 +39,8 @@ The following libraries are already defined in `package.json`, keep or omit them
 - es5-shim (for IE 8 compatibility)
 - jquery 1.12 (for IE compatibility)
 - slick carousel
+- Bootstrap v5
+- Bootstrap Icons
 
 # FYI
 - If you haven't used `browser-sync`(which `grunt-browser-sync` requires as a dependency)  before and there is no npm cache, the installing process could cost a bit more time, be patient until the npm install is done.
