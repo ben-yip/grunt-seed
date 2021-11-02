@@ -419,6 +419,16 @@ module.exports = function (grunt) {
           'node_modules/es5-shim/es5-shim.min.js',
           'node_modules/jquery/dist/jquery.min.js',
           // 'node_modules/bootstrap/dist/js/bootstrap.bundle.min.js',
+
+
+          /**
+           * Popper and Tippy
+           * https://popper.js.org/
+           * https://atomiks.github.io/tippyjs/
+           *  note: remember to import tippy themes under 'node_modules/tippy.js/themes/'
+           */
+          // 'node_modules/@popperjs/core/dist/umd/popper.js',
+          // 'node_modules/tippy.js/dist/tippy-bundle.umd.min.js',
         ],
         dest: `${config.destPath}/`,
         flatten: true,

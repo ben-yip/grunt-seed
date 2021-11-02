@@ -41,6 +41,7 @@ The following libraries are already defined in `package.json`, keep or omit them
 - slick carousel
 - Bootstrap v5
 - Bootstrap Icons
+- Popper and Tippy
 
 # FYI
 - If you haven't used `browser-sync`(which `grunt-browser-sync` requires as a dependency)  before and there is no npm cache, the installing process could cost a bit more time, be patient until the npm install is done.
